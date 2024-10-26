@@ -1,9 +1,10 @@
+import { cn } from '@/lib/utils';
 import { ComponentProps } from 'react';
 
 /**
  * Logo Component Props Type
  */
-type LogoProps = ComponentProps<'svg'> & {
+type IconProps = ComponentProps<'svg'> & {
   /** `<path>` className  */
   innerClassName?: string;
 };
@@ -14,7 +15,7 @@ type LogoProps = ComponentProps<'svg'> & {
 export const LogoIcon = ({
   innerClassName = 'fill-suppin-main',
   ...props
-}: LogoProps) => {
+}: IconProps) => {
   return (
     <svg
       width='124'
@@ -47,6 +48,93 @@ export const LogoIcon = ({
       <path
         d='M93.8763 12.4398L98.6851 4.1108C99.2631 3.10969 100.763 3.30715 101.062 4.42374L101.844 7.34146C101.933 7.67386 102.15 7.95727 102.448 8.12933L104.831 9.50465C105.832 10.0826 105.634 11.5825 104.518 11.8817L95.3358 14.3419C94.2192 14.6411 93.2983 13.441 93.8763 12.4398Z'
         className={innerClassName}
+      />
+    </svg>
+  );
+};
+
+/** btn_Back */
+export const BackIcon = ({
+  innerClassName = 'fill-suppin-gray2',
+  ...props
+}: IconProps) => {
+  return (
+    <svg
+      width='11'
+      height='20'
+      viewBox='0 0 11 20'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='M2.41512 10L10.7068 18.291C10.8945 18.4787 11 18.7333 11 18.9989C11 19.2644 10.8945 19.519 10.7068 19.7068C10.5191 19.8945 10.2645 20 9.99901 20C9.73354 20 9.47893 19.8945 9.29121 19.7068L0.293706 10.7079C0.200605 10.615 0.12674 10.5047 0.0763414 10.3832C0.0259425 10.2617 0 10.1315 0 10C0 9.86848 0.0259425 9.73826 0.0763414 9.61678C0.12674 9.49531 0.200605 9.38497 0.293706 9.29209L9.29121 0.293226C9.47893 0.105476 9.73354 0 9.99901 0C10.2645 0 10.5191 0.105476 10.7068 0.293226C10.8945 0.480976 11 0.735619 11 1.00114C11 1.26665 10.8945 1.5213 10.7068 1.70905L2.41512 10Z'
+        className={innerClassName}
+      />
+    </svg>
+  );
+};
+
+/** btn_Check Icon */
+export const CheckIcon = ({
+  innerClassName,
+  isChecked,
+  ...props
+}: IconProps & {
+  isChecked: boolean;
+}) => {
+  return (
+    <svg
+      width='22'
+      height='22'
+      viewBox='0 0 22 22'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <circle
+        cx='11'
+        cy='11'
+        r='10.5'
+        className={cn(
+          isChecked
+            ? 'fill-suppin-main stroke-suppin-main'
+            : 'fill-none stroke-suppin-gray3',
+          innerClassName,
+        )}
+      />
+      {isChecked && (
+        <path
+          fillRule='evenodd'
+          clipRule='evenodd'
+          d='M16.2004 7.36598C16.3078 7.47342 16.3681 7.61912 16.3681 7.77104C16.3681 7.92295 16.3078 8.06865 16.2004 8.17609L9.75967 14.6174C9.70114 14.6759 9.63166 14.7224 9.55518 14.7541C9.4787 14.7858 9.39672 14.8021 9.31394 14.8021C9.23115 14.8021 9.14918 14.7858 9.0727 14.7541C8.99622 14.7224 8.92673 14.6759 8.86821 14.6174L5.6679 11.4171C5.61467 11.3638 5.57244 11.3007 5.54363 11.2311C5.51483 11.1616 5.5 11.087 5.5 11.0117C5.5 10.9365 5.51483 10.8619 5.54363 10.7924C5.57244 10.7228 5.61467 10.6596 5.6679 10.6064C5.72113 10.5532 5.78432 10.5109 5.85387 10.4821C5.92342 10.4533 5.99796 10.4385 6.07324 10.4385C6.14851 10.4385 6.22305 10.4533 6.2926 10.4821C6.36215 10.5109 6.42534 10.5532 6.47857 10.6064L9.31451 13.4423L15.3897 7.36598C15.4972 7.25858 15.6429 7.19824 15.7948 7.19824C15.9467 7.19824 16.093 7.25858 16.2004 7.36598Z'
+          fill='white'
+        />
+      )}
+    </svg>
+  );
+};
+
+/** icon-chevron-right */
+export const ChevronRight = ({
+  innerClassName = 'stroke-[#B9B9B9]',
+  ...props
+}: IconProps) => {
+  return (
+    <svg
+      width='19'
+      height='20'
+      viewBox='0 0 19 20'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'
+      {...props}
+    >
+      <path
+        d='M7.01953 14.6798L11.6995 9.99983L7.01953 5.31982'
+        className={innerClassName}
+        strokeWidth='1.56'
+        strokeLinecap='round'
+        strokeLinejoin='round'
       />
     </svg>
   );
