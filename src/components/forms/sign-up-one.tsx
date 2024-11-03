@@ -16,15 +16,20 @@ const signUpOneItems = [
     id: '3',
     label: '(필수) 서비스 이용약관 동의',
     isChecked: false,
-    href: '#',
+    href: 'https://phase-comic-d2b.notion.site/c77adc8b28934f1194b9787150a16364?pvs=4',
   },
   {
     id: '4',
     label: '(필수) 개인정보 처리방침 동의',
     isChecked: false,
-    href: '#',
+    href: 'https://phase-comic-d2b.notion.site/7ab3169dc4564272b42c0074d86e5806?pvs=4',
   },
-  { id: '5', label: '(선택) 마케팅 수신 동의 ', isChecked: false, href: '#' },
+  {
+    id: '5',
+    label: '(선택) 마케팅 수신 동의 ',
+    isChecked: false,
+    href: 'https://phase-comic-d2b.notion.site/7b8c9c80568f4599acd1046c619425ee?pvs=4',
+  },
 ];
 
 export const SignUpOne = memo(
@@ -68,12 +73,7 @@ export const SignUpOne = memo(
     }, []);
 
     return (
-      <div
-        className={cn(
-          'flex flex-col gap-8',
-          step === '1' ? 'opacity-100' : 'opacity-0',
-        )}
-      >
+      <div className={cn('flex-col gap-8', step === '1' ? 'flex' : 'hidden')}>
         <h1 className='text-2xl font-semibold text-suppin-gray1'>
           약관에 동의해주세요
         </h1>

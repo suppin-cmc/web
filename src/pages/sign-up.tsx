@@ -1,6 +1,7 @@
 import { SignUpOne } from '@/components/forms/sign-up-one';
+import { SignUpTwo } from '@/components/forms/sign-up-two';
 import { Header } from '@/components/layouts/header';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 export function SignUpPage() {
@@ -9,7 +10,10 @@ export function SignUpPage() {
   const step = searchParams.get('step');
 
   const stepTwoHandler = useCallback(() => setSearchParams({ step: '2' }), []);
-  const stepThreeHandler = () => setSearchParams({ step: '3' });
+  const stepThreeHandler = useCallback(
+    () => setSearchParams({ step: '3' }),
+    [],
+  );
 
   useEffect(() => {
     if (!step) {
@@ -33,6 +37,7 @@ export function SignUpPage() {
             {step}/3
           </div>
           <SignUpOne stepHandler={stepTwoHandler} step={step} />
+          <SignUpTwo stepHandler={stepThreeHandler} step={step} />
         </div>
       </div>
     </div>
