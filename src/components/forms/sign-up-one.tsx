@@ -1,140 +1,113 @@
-import { CheckIcon, ChevronRight } from '@/components/ui/icons';
 import { cn } from '@/lib/utils';
-import { memo, useCallback, useState } from 'react';
-import { Separator } from '@/components/ui/separator';
+import { SignUpFormValues } from '@/schemas/auth.schema';
+import { useCallback } from 'react';
+import { UseFormReturn } from 'react-hook-form';
 import { Button } from '../ui/button';
+import { Separator } from '../ui/separator';
+import { CheckIcon } from '../ui/icons';
 
-const signUpOneItems = [
-  { id: '1', label: '모두 동의', isChecked: false, href: null },
-  {
-    id: '2',
-    label: '(필수) 만 14세 이상입니다.',
-    isChecked: false,
-    href: null,
-  },
-  {
-    id: '3',
-    label: '(필수) 서비스 이용약관 동의',
-    isChecked: false,
-    href: 'https://phase-comic-d2b.notion.site/c77adc8b28934f1194b9787150a16364?pvs=4',
-  },
-  {
-    id: '4',
-    label: '(필수) 개인정보 처리방침 동의',
-    isChecked: false,
-    href: 'https://phase-comic-d2b.notion.site/7ab3169dc4564272b42c0074d86e5806?pvs=4',
-  },
-  {
-    id: '5',
-    label: '(선택) 마케팅 수신 동의 ',
-    isChecked: false,
-    href: 'https://phase-comic-d2b.notion.site/7b8c9c80568f4599acd1046c619425ee?pvs=4',
-  },
-];
+export const SignUpOne = ({
+  form,
+  step,
+  stepHandler,
+}: {
+  form: UseFormReturn<SignUpFormValues>;
+  step: string | null;
+  stepHandler: () => void;
+}) => {
+  const { watch, setValue } = form;
+  const termsAgree = watch('termsAgree');
 
-export const SignUpOne = memo(
-  ({ step, stepHandler }: { step: string | null; stepHandler: () => void }) => {
-    const [items, setItems] = useState<typeof signUpOneItems>(signUpOneItems);
+  const handleCheckboxClick = useCallback(
+    (field: keyof SignUpFormValues['termsAgree']) => {
+      setValue(`termsAgree.${field}` as const, !termsAgree[field]);
+    },
+    [termsAgree, setValue],
+  );
 
-    const essItems = items.filter((item) => item.isChecked);
-    const isEnabled =
-      essItems.includes(items[1]) &&
-      essItems.includes(items[2]) &&
-      essItems.includes(items[3]);
+  const handleAllCheck = useCallback(() => {
+    const allChecked = Object.values(termsAgree).every((value) => value);
+    const newValue = !allChecked;
 
-    const handleCheckboxClick = useCallback((clickedId: string) => {
-      setItems((prevItems) => {
-        const newItems = [...prevItems];
+    (
+      Object.keys(termsAgree) as Array<keyof SignUpFormValues['termsAgree']>
+    ).forEach((key) => {
+      setValue(`termsAgree.${key}` as const, newValue);
+    });
+  }, [termsAgree, setValue]);
 
-        if (clickedId === '1') {
-          const isAllChecked = !newItems[0].isChecked;
-          return newItems.map((item) => ({
-            ...item,
-            isChecked: isAllChecked,
-          }));
-        }
+  const isEnabled =
+    termsAgree.ageOver14Agree &&
+    termsAgree.serviceUseAgree &&
+    termsAgree.personalInfoAgree;
 
-        const itemIndex = newItems.findIndex((item) => item.id === clickedId);
-        newItems[itemIndex] = {
-          ...newItems[itemIndex],
-          isChecked: !newItems[itemIndex].isChecked,
-        };
+  const terms = [
+    {
+      key: 'ageOver14Agree' as const,
+      label: '(필수) 만 14세 이상입니다.',
+    },
+    {
+      key: 'serviceUseAgree' as const,
+      label: '(필수) 서비스 이용약관 동의',
+    },
+    {
+      key: 'personalInfoAgree' as const,
+      label: '(필수) 개인정보 처리방침 동의',
+    },
+    {
+      key: 'marketingAgree' as const,
+      label: '(선택) 마케팅 수신 동의',
+    },
+  ];
 
-        const allOthersChecked = newItems
-          .slice(1)
-          .every((item) => item.isChecked);
-        newItems[0] = {
-          ...newItems[0],
-          isChecked: allOthersChecked,
-        };
-
-        return newItems;
-      });
-    }, []);
-
-    return (
-      <div className={cn('flex-col gap-8', step === '1' ? 'flex' : 'hidden')}>
+  return (
+    <div
+      className={cn('flex flex-col gap-8', step === '1' ? 'block' : 'hidden')}
+    >
+      <div className='mb-24 flex flex-col gap-1.5'>
         <h1 className='text-2xl font-semibold text-suppin-gray1'>
           약관에 동의해주세요
         </h1>
         <div className='flex flex-col'>
-          {items.map((item) => (
-            <div key={item.id} className='flex items-center justify-between'>
-              <CheckBox item={item} onCheck={handleCheckboxClick} />
-              {item.href && (
-                <a href={item.href} target='_blank'>
-                  <ChevronRight />
-                </a>
-              )}
+          <div className='flex items-center justify-between'>
+            <div className='flex min-h-10 w-full gap-2.5 p-2.5'>
+              <CheckIcon
+                onClick={handleAllCheck}
+                isChecked={Object.values(termsAgree).every((value) => value)}
+                className='cursor-pointer'
+              />
+              <div className='flex w-full flex-col gap-2.5'>
+                <span className='font-semibold text-[#3F3F3F]'>모두 동의</span>
+                <span className='text-xs font-medium text-[#787878]'>
+                  서비스 이용을 위해 아래의 약관을 모두 동의합니다.
+                </span>
+                <Separator className='h-[1px] w-full bg-suppin-gray4' />
+              </div>
             </div>
-          ))}
+          </div>
         </div>
+        {terms.map(({ key, label }) => (
+          <div key={key} className='flex items-center justify-between'>
+            <div className='flex min-h-10 w-full items-center gap-2.5 p-2.5'>
+              <CheckIcon
+                onClick={() => handleCheckboxClick(key)}
+                isChecked={termsAgree[key]}
+              />
+              <span className='font-semibold text-[#3F3F3F]'>{label}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className='fixed bottom-0 left-0 right-0 bg-white px-4 py-4'>
         <Button
           variant='ghost'
           disabled={!isEnabled}
           onClick={stepHandler}
-          className='absolute bottom-10 left-0 flex h-[50px] w-full items-center justify-center rounded-md bg-suppin-main font-semibold text-white disabled:bg-suppin-gray3'
+          className='flex h-[50px] w-full items-center justify-center rounded-md bg-suppin-main font-semibold text-white disabled:bg-suppin-gray3'
         >
           다음으로
         </Button>
       </div>
-    );
-  },
-);
-SignUpOne.displayName = 'SignUpOne';
-
-const CheckBox = memo(
-  ({
-    item,
-    onCheck,
-  }: {
-    item: { id: string; label: string; isChecked: boolean };
-    onCheck: (id: string) => void;
-  }) => {
-    return (
-      <div
-        className={cn(
-          'flex min-h-10 w-full gap-2.5 p-2.5',
-          item.id === '1' ? 'items-start' : 'items-center',
-        )}
-      >
-        <CheckIcon
-          onClick={() => onCheck(item.id)}
-          isChecked={item.isChecked}
-        />
-        {item.id === '1' ? (
-          <div className='flex w-full flex-col gap-2.5'>
-            <span className='font-semibold text-[#3F3F3F]'>{item.label}</span>
-            <span className='text-xs font-medium text-[#787878]'>
-              서비스 이용을 위해 아래의 약관을 모두 동의합니다.
-            </span>
-            <Separator className='h-[1px] w-full bg-suppin-gray4' />
-          </div>
-        ) : (
-          <span className='font-semibold text-[#3F3F3F]'>{item.label}</span>
-        )}
-      </div>
-    );
-  },
-);
-CheckBox.displayName = 'CheckBox';
+    </div>
+  );
+};
